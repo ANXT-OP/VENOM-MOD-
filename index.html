@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer and Random Result</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            color: white;
+        }
+
+        .linear {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to right, black, green);
+            border: 2px solid green;
+            box-shadow: 0 0 10px green;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .linear2 {
+            margin-top: 10px;
+            border: 2px solid green;
+            box-shadow: 0 0 10px green;
+            padding: 10px;
+        }
+
+        .textview {
+            margin: 10px;
+            padding: 5px;
+            text-align: center;
+            font-size: 20px;
+            color: green;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px;
+            background: green;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 0 10px green;
+        }
+
+        .list-view {
+            margin-top: 20px;
+            background: black;
+            border: 1px solid green;
+            padding: 10px;
+            box-shadow: 0 0 10px green;
+            height: 150px;
+            overflow-y: auto;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px green;
+            }
+            50% {
+                box-shadow: 0 0 20px green;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="linear">
+        <h1>Welcome to Timer and Random Result</h1>
+    </div>
+
+    <div class="linear2">
+        <div id="textview1" class="textview">// Timer Data Here</div>
+        <div id="textview2" class="textview">// Timer Countdown Here</div>
+        <div id="textview3" class="textview">// Random Result</div>
+
+        <button class="button" id="check-result">Check Result</button>
+        <button class="button" id="history">History</button>
+
+        <div class="list-view" id="list-view">History:</div>
+    </div>
+
+    <script>
+        // Timer Logic
+        let previousTextView1 = "";
+        const textView1 = document.getElementById("textview1");
+        const textView2 = document.getElementById("textview2");
+        const textView3 = document.getElementById("textview3");
+        const listView = document.getElementById("list-view");
+
+        setInterval(() => {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentSecond = now.getSeconds();
+
+            const startHour = 5;
+            const startMinute = 29;
+
+            const elapsedMinutes = Math.max(0, (currentHour * 60 + currentMinute) - (startHour * 60 + startMinute));
+
+            // Update textView1 with formatted data
+            const formattedDate = now.toISOString().split("T")[0].replace(/-/g, "");
+            const periodNumber = "100001" + elapsedMinutes.toString().padStart(4, "0");
+            textView1.innerText = `${formattedDate}${periodNumber}`;
+
+            // Update textView2 with remaining seconds
+            const remainingSeconds = 60 - currentSecond;
+            textView2.innerText = `00:${remainingSeconds.toString().padStart(2, "0")}`;
+        }, 1000);
+
+        // Button click logic
+        document.getElementById("check-result").addEventListener("click", () => {
+            const currentTextView1 = textView1.innerText;
+            if (currentTextView1 === previousTextView1) {
+                textView3.innerText = "Please wait for the next period.";
+            } else {
+                const randomResult = Math.floor(Math.random() * 100); // Generate random number
+                textView3.innerText = `Result: ${randomResult}`;
+                const listItem = document.createElement("div");
+                listItem.innerText = `Result: ${randomResult}`;
+                listView.appendChild(listItem);
+                previousTextView1 = currentTextView1;
+            }
+        });
+    </script>
+</body>
+</html>
